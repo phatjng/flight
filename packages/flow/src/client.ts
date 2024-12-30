@@ -17,6 +17,7 @@ export class FlowClient<Models extends FlowModels> {
   private _socket: Socket;
   private _storage: IDBStorage;
   private _transport: Transport;
+  // @ts-expect-error - Simply initializing the model manager
   private _modelManager: ModelManager;
 
   public namespace: string;
