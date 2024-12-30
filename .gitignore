@@ -1,7 +1,9 @@
 .DS_Store
+.vercel
 tsconfig.tsbuildinfo
 
 node_modules
 dist
+
 
 .env*
