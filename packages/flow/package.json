@@ -1,9 +1,23 @@
 {
   "name": "flow",
   "version": "0.0.0",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup"
+  },
   "devDependencies": {
-    "@types/react": "^18"
+    "@types/react": "^18",
+    "tsup": "^8.3.5"
   },
   "dependencies": {
     "idb": "^8.0.0",
