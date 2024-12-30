@@ -14,7 +14,8 @@ RUN pnpm install --frozen-lockfile
 COPY packages/server ./packages/server
 COPY packages/flow ./packages/flow
 
-RUN pnpm build
+RUN cd packages/flow && pnpm build
+RUN cd packages/server && pnpm build
 
 # Production image
 FROM node:20-slim AS runner
