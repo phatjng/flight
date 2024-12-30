@@ -1,0 +1,21 @@
+{
+  "name": "@flight/server",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch src/main.ts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/node-ws": "^1.0.5",
+    "flow": "workspace:*",
+    "hono": "^4.6.14",
+    "luxon": "^3.5.0"
+  }
+}
