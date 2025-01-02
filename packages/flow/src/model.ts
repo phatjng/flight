@@ -5,6 +5,7 @@ import {
   observable,
   runInAction,
 } from "mobx";
+import type { IDBStorage } from "./idb-storage";
 
 export type Atomic = {
   id: string;
@@ -43,17 +44,49 @@ export class FlowModel<Data extends Atomic> {
     return Array.from(this.raw.values());
   }
 
-  public async init() {
-    const bootstrapData = await this.bootstrap();
+  public async init({
+    storage,
+    shouldLoadFromRemote,
+  }: {
+    storage: IDBStorage;
+    shouldLoadFromRemote: boolean;
+  }) {
+    if (shouldLoadFromRemote) {
+      // Load from user-defined bootstrap function
+      const bootstrapData = await this.bootstrap();
 
-    if (bootstrapData.length > 0) {
-      let bootstrapDataMap = new Map<string, Data>();
-      for (const data of bootstrapData) {
-        bootstrapDataMap.set(data.id, data);
+      if (bootstrapData.length > 0) {
+        const dataMap = new Map<string, Data>();
+
+        const tx = storage.db.transaction(this.modelKey, "readwrite");
+
+        for (const data of bootstrapData) {
+          await tx.store.put(data);
+          dataMap.set(data.id, data);
+        }
+
+        await tx.done;
+
+        runInAction(() => {
+          this.raw = dataMap;
+        });
+      }
+    } else {
+      // Load from local storage
+      const dataMap = new Map<string, Data>();
+
+      const tx = storage.db.transaction(this.modelKey, "readonly");
+
+      for await (const cursor of tx.store) {
+        const datum: Data = cursor.value;
+
+        dataMap.set(datum.id, datum);
       }
 
+      await tx.done;
+
       runInAction(() => {
-        this.raw = bootstrapDataMap;
+        this.raw = dataMap;
       });
     }
   }

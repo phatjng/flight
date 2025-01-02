@@ -3,6 +3,7 @@ import { useFlow } from "#/providers/flow";
 import { DateTime } from "luxon";
 import { computed } from "mobx";
 import { observer } from "mobx-react-lite";
+import * as R from "remeda";
 import { Checkbox } from "./ui/checkbox";
 
 const TaskListItem = observer(({ task }: { task: Task }) => {
@@ -41,7 +42,7 @@ const TaskList = observer(
           <span className="px-8 py-4">You are free to take it easy!</span>
         ) : (
           <ul className="divide-y">
-            {tasks.map((task) => {
+            {R.sortBy(tasks, R.prop("createdAt")).map((task) => {
               return <TaskListItem key={task.id} task={task} />;
             })}
           </ul>

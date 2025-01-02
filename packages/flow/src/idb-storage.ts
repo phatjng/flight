@@ -36,6 +36,8 @@ export class IDBStorage {
       models[modelKey] = model;
     }
 
+    let shouldLoadFromRemote = false;
+
     this._db = await openDB(name, version, {
       upgrade: (db) => {
         db.createObjectStore(METADATA_STORE_NAME);
@@ -55,8 +57,15 @@ export class IDBStorage {
             }
           }
         }
+
+        // Should bootstrap from remote on first init
+        shouldLoadFromRemote = true;
       },
     });
+
+    return {
+      shouldLoadFromRemote,
+    };
   }
 
   public close() {

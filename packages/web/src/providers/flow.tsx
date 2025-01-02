@@ -12,7 +12,7 @@ const models = {
 
 function createFlow(organizationId: string) {
   const flow = new FlowClient({
-    namespace: "flight",
+    namespace: organizationId,
     models: models,
     syncUrl: `${import.meta.env.VITE_SYNC_SERVER_URL}/sync/${organizationId}`,
   });

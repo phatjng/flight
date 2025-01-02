@@ -108,6 +108,7 @@ export class Transaction {
       await fn(this);
       await this._commit();
     } catch (e) {
+      // TODO: Handle error
     } finally {
       this._isInTransaction = false;
     }

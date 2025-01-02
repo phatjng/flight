@@ -37,6 +37,7 @@ export class FlowClient<Models extends FlowModels> {
       storage: this._storage,
     });
     this._modelManager = new ModelManager({
+      storage: this._storage,
       socket: this._socket,
       models: options.models,
     });
@@ -50,13 +51,20 @@ export class FlowClient<Models extends FlowModels> {
 
   public async init() {
     // Initialize IDB for KV storage
-    await this._storage.init();
+    const storageResult = await this._storage.init();
 
     // Initialize WebSocket for syncing
     this._socket.init();
 
     // Initialize all models
-    await Promise.all(Object.values(this.models).map((model) => model.init()));
+    await Promise.all(
+      Object.values(this.models).map((model) =>
+        model.init({
+          storage: this._storage,
+          shouldLoadFromRemote: storageResult.shouldLoadFromRemote,
+        }),
+      ),
+    );
   }
 
   public close() {
